@@ -3,7 +3,7 @@ from flask_cors import CORS
 import os
 from pathlib import Path
 import hashlib
-from datetime import datetime
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -42,7 +42,8 @@ def generate_valid_token():
     tokens = []
     for minute_offset in range(-5, 1):
         time_key = now.replace(second=0, microsecond=0)
-        time_key = time_key.replace(minute=time_key.minute + minute_offset)
+        from datetime import timedelta
+        time_key = time_key + timedelta(minutes=minute_offset)
         time_str = time_key.strftime('%Y%m%d%H%M')
         token = hashlib.sha256(f"{SECRET_KEY}{time_str}".encode()).hexdigest()[:16]
         tokens.append(token)
